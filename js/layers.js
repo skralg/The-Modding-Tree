@@ -1,28 +1,494 @@
-addLayer("p", {
-    name: "prestige", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "P", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+addLayer("c",{
+    name: "Character",
+    symbol: "C",
+    row: 0,
+    position: 0,
     startData() { return {
         unlocked: true,
-		points: new Decimal(0),
+        points: new Decimal(1),
     }},
-    color: "#4BDC13",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "prestige points", // Name of prestige currency
-    baseResource: "points", // Name of resource prestige is based on
-    baseAmount() {return player.points}, // Get the current amount of baseResource
-    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.5, // Prestige currency exponent
+    color: "gray",
+    requires: new Decimal(0),
+    resource: "Hit Points",
+    type: "none",
+    layerShown() { return true},
+    upgrades: {
+    },
+    clickables: {
+        11: {
+            title: "Cheat+1",
+            display() { return "Add 1 point" },
+            canClick: true,
+            onClick() { player[this.layer].points = player[this.layer].points.add(1) },
+        },
+        12: {
+            title: "Cheat*10",
+            display() { return "10x points" },
+            canClick() { return true },
+            onClick() { player[this.layer].points = player[this.layer].points.mul(10) },
+        },
+        21: {
+            title: "Get Strong",
+            display: "Strength Training",
+            style() {
+                return {'background-color': 'red'}
+            },
+            unlocked() {
+                if (player["str"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["str"].points == 0 && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["str"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+        22: {
+            title: "Get Fast",
+            display: "Dexterity Training",
+            style() {
+                return {'background-color': 'orange'}
+            },
+            unlocked() {
+                if (player["dex"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["dex"].points.eq(0) && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["dex"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+        31: {
+            title: "Get Tough",
+            display: "Constitution Training",
+            style() {
+                return {'background-color': 'yellow'}
+            },
+            unlocked() {
+                if (player["con"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["con"].points.eq(0) && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["con"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+        32: {
+            title: "Get Smart",
+            display: "Intelligence Training",
+            style() {
+                return {'background-color': 'lightblue'}
+            },
+            unlocked() {
+                if (player["int"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["int"].points.eq(0) && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["int"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+        41: {
+            title: "Get Wise",
+            display: "Wisdom Training",
+            style() {
+                return {'background-color': 'green'}
+            },
+            unlocked() {
+                if (player["wis"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["wis"].points.eq(0) && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["wis"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+        42: {
+            title: "Get Nice",
+            display: "Charisma Training",
+            style() {
+                return {'background-color': 'purple'}
+            },
+            unlocked() {
+                if (player["cha"].points.eq(0)) {
+                    return true
+                }
+                return false
+            },
+            canClick() {
+                if (player["cha"].points.eq(0) && player[this.layer].points.gt(0)) {
+                    return true
+                }
+                return false
+            },
+            onClick() {
+                player["cha"].points = new Decimal(1)
+                player[this.layer].points = player[this.layer].points.sub(1)
+            },
+        },
+    },
+    buyables: {
+    },
+    infoboxes: {
+    },
+    branches: [
+        ["str", "darkred"],
+        ["dex", "darkorange"],
+        ["con", "khaki"],
+        ["int", "blue"],
+        ["wis", "lightgreen"],
+        ["cha", "violet"],
+        ["e", "white"]
+    ],
+})
+
+addLayer("e", {
+    name: "Equipment",
+    symbol: "E",
+    row: 0,
+    position: 1,
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+        equipment: {
+            // armor
+            head: 0,
+            shoulders: 0,
+            arms: 0,
+            gloves: 0,
+            body: 0,
+            waist: 0,
+            legs: 0,
+            boots: 0,
+            // tools
+            axe: 0,
+            pick: 0,
+        }
+    }},
+    color: "#3333FF",
+    requires: new Decimal(0),
+    resource: "Weight Allowance",
+    type: "none",
+    layerShown() {return true},
+    upgrades: {
+    },
+    clickables: {
+    },
+    buyables: {
+    },
+    infoboxes: {
+    },
+    branches: [
+        ["i", "white"]
+    ],
+})
+
+addLayer("i",{
+    name: "Inventory",
+    symbol: "I",
+    row: 0,
+    position: 2,
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+        inventory: {
+            // misc
+            balls: 0,
+            cards: 0,
+        }
+    }},
+    color: "white",
+    requires: new Decimal(0),
+    resource: "Backpack Slots",
+    type: "none",
+    layerShown() {return true},
+    upgrades: {
+    },
+    clickables: {
+    },
+    buyables: {
+    },
+    infoboxes: {
+    },
+})
+
+addLayer("pve", {
+    name: "Training Ground", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "PvE", // This appears on the layer's node. Default is the id with the first letter capitalized
+    row: 0, // Row the layer is in on the tree (0 is the first row)
+    position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+    }},
+    // color: "#4BDC13",
+    color: "#4B4B4B",
+    requires: new Decimal(0), // new Decimal(1), // Can be a function that takes requirement increases into account
+    resource: "Kills", // Name of prestige currency
+    //baseResource: "Dagger Stabs", // Name of resource prestige is based on
+    //baseAmount() {return player.points}, // Get the current amount of baseResource
+    type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.25, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
-        mult = new Decimal(1)
-        return mult
+        return new Decimal(1)
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
-    row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
-        {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "T", description: "T: Click for 1 Dagger Stab", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true}
+    layerShown() {return true},
+    upgrades: {
+        11: {
+            title: "Upgrade Dagger",
+            description: "Upgrade your little dagger to something a bit better",
+            cost: new Decimal(1),
+        },
+    },
+    clickables: {
+        11: {
+            title: "Attack",
+            tooltip: "Attack: Wooden Dummy",
+            display() {
+                st = getClickableState(this.layer, this.id)
+                if (typeof(st) == 'undefined' || st == '') {
+                    setClickableState(this.layer, this.id, 0)
+                    st = 0
+                }
+                return "Wooden Dummy<br><i>" + st + " kills</i>"
+            },
+            canClick() {return true},
+            onClick() {
+                st = getClickableState(this.layer, this.id)
+                setClickableState(this.layer, this.id, st + 1)
+                player[this.layer].points = player[this.layer].points.add(1)
+                player.points = player.points.add(1)
+            },
+            branches: [[12,"#4B4B4B"]],
+        },
+        12: {
+            title: "Attack",
+            tooltip: "Attack: Small Rat",
+            display() {
+                st = getClickableState(this.layer, this.id)
+                if (typeof(st) == 'undefined' || st == '') {
+                    setClickableState(this.layer, this.id, 0)
+                    st = 0
+                }
+                return "Small Rat<br><i>" + st + " kills</i>"
+            },
+            canClick() {return true},
+            onClick() {
+                st = getClickableState(this.layer, this.id)
+                setClickableState(this.layer, this.id, st + 1)
+                player[this.layer].points = player[this.layer].points.add(1)
+                player.points = player.points.add(1)
+                return 0
+            },
+        },
+    },
+    buyables: {
+        11: {
+            title: 'Buy some armor',
+            cost(x) { return new Decimal(1).mul(x) },
+            display() { return 'Armor Level: ' + getBuyableAmount(this.layer, this.id) + ' for ' + this.cost() },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+        },
+    },
+    infoboxes: {
+        training: {
+            title: 'The Training Yard',
+            body: "Level up your character through combat!",
+        },
+    },
+    bars: {
+        bigBar: {
+            direction: RIGHT,
+            width: 200,
+            height: 50,
+            display: "Wooden Dummy",
+            fillStyle: "solid",
+            progress() { return .50 },
+            unlocked() { return true },
+        },
+    },
+})
+
+
+addLayer("pvp", {
+    name: "Training Ground Version 2", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "PvP", // This appears on the layer's node. Default is the id with the first letter capitalized
+    row: 0, // Row the layer is in on the tree (0 is the first row)
+    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(0),
+    }},
+    // color: "#4BDC13",
+    color: "#4B4B4B",
+    requires: new Decimal(0), // new Decimal(1), // Can be a function that takes requirement increases into account
+    resource: "Kills", // Name of prestige currency
+    //baseResource: "Dagger Stabs", // Name of resource prestige is based on
+    //baseAmount() {return player.points}, // Get the current amount of baseResource
+    type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.25, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        return new Decimal(1)
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    hotkeys: [
+        {key: "T", description: "T: Click for 1 Dagger Stab", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown() {return true},
+    upgrades: {
+        11: {
+            title: "Upgrade Dagger",
+            description: "Upgrade your little dagger to something a bit better",
+            cost: new Decimal(1),
+        },
+    },
+    clickables: {
+        wd: {
+            title: "Attack",
+            tooltip: "Attack: Wooden Dummy",
+            display() {
+                st = getClickableState(this.layer, this.id)
+                if (typeof(st) == 'undefined' || st == '') {
+                    setClickableState(this.layer, this.id, 0)
+                    st = 0
+                }
+                return "Wooden Dummy<br><i>" + st + " kills</i>"
+            },
+            canClick() {return true},
+            onClick() {
+                st = getClickableState(this.layer, this.id)
+                setClickableState(this.layer, this.id, st + 1)
+                player[this.layer].points = player[this.layer].points.add(1)
+                player.points = player.points.add(1)
+            },
+            branches: [[12,"#4B4B4B"]],
+        },
+        sr: {
+            title: "Attack",
+            tooltip: "Attack: Small Rat",
+            display() {
+                st = getClickableState(this.layer, this.id)
+                if (typeof(st) == 'undefined' || st == '') {
+                    setClickableState(this.layer, this.id, 0)
+                    st = 0
+                }
+                return "Small Rat<br><i>" + st + " kills</i>"
+            },
+            canClick() {return true},
+            onClick() {
+                st = getClickableState(this.layer, this.id)
+                setClickableState(this.layer, this.id, st + 1)
+                player[this.layer].points = player[this.layer].points.add(1)
+                player.points = player.points.add(1)
+                return 0
+            },
+        },
+    },
+    buyables: {
+        11: {
+            title: 'Buy some armor',
+            cost(x) { return new Decimal(1).mul(x) },
+            display() { return 'Armor Level: ' + getBuyableAmount(this.layer, this.id) + ' for ' + this.cost() },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+        },
+    },
+    infoboxes: {
+        training: {
+            title: 'The Training Yard Version 2<br>using progress bars!',
+            body: "Level up your character through combat!",
+        },
+    },
+    bars: {
+        wd: {
+            direction: RIGHT,
+            width: 110,
+            height: 10,
+            // display: "Wooden Dummy",
+            fillStyle: {'background-color' : "#FF0000"},
+            baseStyle: {'background-color' : "#969696"},
+            textStyle: {'color': '#04e050'},
+            borderStyle: {'border-width': '1px', 'border-color': 'black'},
+            progress() { return .50 },
+            unlocked() { return true },
+        },
+    },
+    tabFormat: [
+        ["infobox", "training"],
+        "main-display",
+        "h-line",
+        [
+            "row",
+            [
+                [
+                    "column",
+                    [
+                        ["clickable", "wd"],
+                        ["bar", "wd"],
+                    ],
+                ],
+                "blank",
+                [
+                    "column",
+                    [
+                        ["clickable", "sr"],
+                    ],
+                ],
+            ],
+        ],
+    ],
 })

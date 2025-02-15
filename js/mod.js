@@ -1,27 +1,30 @@
 let modInfo = {
-	name: "The ??? Tree",
-	author: "nobody",
-	pointsName: "points",
-	modFiles: ["layers.js", "tree.js"],
+	name: "The RPG Tree",
+	author: "simple",
+	pointsName: "levels",
+	modFiles: [
+		"layers.js", "tree.js",
+		"layers/str.js", "layers/dex.js", "layers/con.js",
+		"layers/int.js", "layers/wis.js", "layers/cha.js"
+	],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "Character Generation",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+let changelog = `<h1>Change Log:</h1><br>
+	<h3>v0.1</h3><br>
+		- Initial creation`
 
-let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
+let winText = `gg!`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -33,7 +36,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return false
 }
 
 // Calculate points/sec!
