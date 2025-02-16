@@ -14,12 +14,7 @@ addLayer("dex",{
     requires: new Decimal(0),
     resource: "Dexterity Points",
     type: "none",
-    layerShown() {
-        if (player[this.layer].points == 0) {
-            return false
-        }
-        return true
-    },
+    layerShown() { return (player[this.layer].points == 0) ? false : true },
     upgrades: {
     },
     clickables: {
@@ -110,5 +105,6 @@ addLayer("dex",{
         ["bar", "b1"],
         "blank",
         "clickables",
+        "milestones",
     ],
 })

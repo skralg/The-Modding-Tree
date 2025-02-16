@@ -9,17 +9,23 @@ addLayer("str",{
         // Current and Target for point skillup
         current: new Decimal(0),
         target: new Decimal(10),
+        // Convenience functions
+        currAdd(x) {
+            this.current = this.current.plus(x)
+            c = this.current
+            t = this.target
+            if (c.gte(t)) {
+                this.current = new Decimal(0)
+                this.points = this.points.plus(1)
+                this.target = this.target.times(10)
+            }
+        },
     }},
     color: "red",
     requires: new Decimal(0),
     resource: "Strength Points",
     type: "none",
-    layerShown() {
-        if (player[this.layer].points == 0) {
-            return false
-        }
-        return true
-    },
+    layerShown() { return (player[this.layer].points == 0) ? false : true },
     upgrades: {
     },
     clickables: {
@@ -29,14 +35,7 @@ addLayer("str",{
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
+                player[this.layer].currAdd(click_value)
             },
         },
         12: {
@@ -45,34 +44,27 @@ addLayer("str",{
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
+                player[this.layer].currAdd(click_value)
             },
         },
         21: {
             title: "Chop wood",
             display: "<br>Requires an axe",
             canClick() {
-                if (player['e']['equipment']['axe'] > 0) {
-                    return true
-                }
-                return false
+                return (player['e']['equipment']['axe'] == 0) ? false : true
+            },
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player[this.layer].currAdd(click_value)
+                // might need to be modified later
+                player["i"]["inventory"]["wood"] += click_value
             },
         },
         22: {
             title: "Mine ore",
             display: "<br>Requires a pick",
             canClick() {
-                if (player['e']['equipment']['pick'] > 0) {
-                    return true
-                }
-                return false
+                return (player['e']['equipment']['pick'] == 0) ? false : true
             },
         },
     },
@@ -103,6 +95,18 @@ addLayer("str",{
             },
         },
     },
+    milestones: {
+        0: {
+            requirementDescription: "1 Milestone Point",
+            effectDescription: "Feel Good",
+            done() { return player[this.layer].points.gte(1) },
+        },
+        1: {
+            requirementDescription: "2 Milestone Points",
+            effectDescription: "Feel better",
+            done() { return player[this.layer].points.gte(2) },
+        },
+    },
     tabFormat: [
         ["infobox", "top"],
         "main-display",
@@ -110,5 +114,7 @@ addLayer("str",{
         ["bar", "b1"],
         "blank",
         "clickables",
+        "blank",
+        "milestones",
     ],
 })

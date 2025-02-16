@@ -193,12 +193,16 @@ addLayer("e", {
             // armor
             head: 0,
             shoulders: 0,
+            neck: 0,
             arms: 0,
-            gloves: 0,
+            hands: 0,
+            ring: 0,
             body: 0,
             waist: 0,
             legs: 0,
-            boots: 0,
+            feet: 0,
+            weapon: 0,
+            shield: 0,
             // tools
             axe: 0,
             pick: 0,
@@ -212,6 +216,67 @@ addLayer("e", {
     upgrades: {
     },
     clickables: {
+        11: {
+            title: "Head",
+            display() { return "<br>Level " + player[this.layer].equipment.head },
+            canClick: false,
+            style: {'background-color': 'gray'},
+        },
+        21: {
+            title: "Shoulders",
+            display() { return "<br>Level " + player[this.layer].equipment.shoulders },
+            style: {'background-color': 'gray'},
+        },
+        23: {
+            title: "Neck",
+            display() { return "<br>Level " + player[this.layer].equipment.neck },
+            style: {'background-color': 'gray'},
+        },
+        31: {
+            title: "Arms",
+            display() { return "<br>Level " + player[this.layer].equipment.arms },
+            style: {'background-color': 'gray'},
+        },
+        32: {
+            title: "Body",
+            display() { return "<br>Level " + player[this.layer].equipment.body },
+            style: {'background-color': 'gray'},
+        },
+        33: {
+           title: "Ring",
+           display() { return "<br>Level " + player[this.layer].equipment.ring },
+           style: {'background-color': 'gray'},
+        },
+        51: {
+            title: "Weapon",
+            display() { return "<br>Level " + player[this.layer].equipment.weapon },
+            style: {'background-color': 'gray'},
+        },
+        52: {
+            title: "Hands",
+            display() { return "<br>Level " + player[this.layer].equipment.hands },
+            style: {'background-color': 'gray'},
+        },
+        53: {
+            title: "Waist",
+            display() { return "<br>Level " + player[this.layer].equipment.waist },
+            style: {'background-color': 'gray'},
+        },
+        54: {
+            title: "Shield",
+            display() { return "<br>Level " + player[this.layer].equipment.shield },
+            style: {'background-color': 'gray'},
+        },
+        61: {
+            title: "Legs",
+            display() { return "<br>Level " + player[this.layer].equipment.legs },
+            style: {'background-color': 'gray'},
+        },
+        71: {
+            title: "Feet",
+            display() { return "<br>Level " + player[this.layer].equipment.feet },
+            style: {'background-color': 'gray'},
+        },
     },
     buyables: {
     },
@@ -234,16 +299,23 @@ addLayer("i",{
             // misc
             balls: 0,
             cards: 0,
+            wood: 0,
         }
     }},
     color: "white",
     requires: new Decimal(0),
-    resource: "Backpack Slots",
+    resource: "Extra Backpack Slots",
     type: "none",
-    layerShown() {return true},
+    layerShown: true,
     upgrades: {
     },
     clickables: {
+        11: {
+            title: "Wood",
+            display() { return "<br>" + player[this.layer].inventory.wood },
+            canClick: false,
+            style: {'background-color': 'saddlebrown'},
+        },
     },
     buyables: {
     },

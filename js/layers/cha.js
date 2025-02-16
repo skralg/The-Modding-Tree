@@ -11,12 +11,7 @@ addLayer("cha",{
     requires: new Decimal(0),
     resource: "Charisma Points",
     type: "none",
-    layerShown() {
-        if (player[this.layer].points == 0) {
-            return false
-        }
-        return true
-    },
+    layerShown() { return (player[this.layer].points == 0) ? false : true },
     upgrades: {
     },
     clickables: {
@@ -25,4 +20,13 @@ addLayer("cha",{
     },
     infoboxes: {
     },
+    tabFormat: [
+        ["infobox", "top"],
+        "main-display",
+        "blank",
+        ["bar", "b1"],
+        "blank",
+        "clickables",
+        "milestones",
+    ],
 })

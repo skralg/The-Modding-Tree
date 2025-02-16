@@ -11,12 +11,7 @@ addLayer("wis",{
     requires: new Decimal(0),
     resource: "Wisdom Points",
     type: "none",
-    layerShown() {
-        if (player[this.layer].points == 0) {
-            return false
-        }
-        return true
-    },
+    layerShown() { return (player[this.layer].points == 0) ? false : true },
     upgrades: {
     },
     clickables: {
@@ -25,4 +20,13 @@ addLayer("wis",{
     },
     infoboxes: {
     },
+    tabFormat: [
+        ["infobox", "top"],
+        "main-display",
+        "blank",
+        ["bar", "b1"],
+        "blank",
+        "clickables",
+        "milestones",
+    ],
 })
