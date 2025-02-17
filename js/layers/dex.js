@@ -9,65 +9,59 @@ addLayer("dex",{
         // Current and Target for point skillup
         current: new Decimal(0),
         target: new Decimal(10),
+        // Convenience functions
+        currAdd(x) {
+            this.current = this.current.plus(x)
+            c = this.current
+            t = this.target
+            if (c.gte(t)) {
+                this.current = new Decimal(0)
+                this.points = this.points.plus(1)
+                this.target = this.target.times(10)
+            }
+        },
+        rgb: {
+            r: 0xff,
+            g: 0xa5,
+            b: 0x00,
+            nodecolor() {
+                return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
+            },
+            branchcolor() {
+                r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
+                return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+        },
     }},
-    color: "orange",
+    color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Dexterity Points",
     type: "none",
-    layerShown() { return (player[this.layer].points == 0) ? false : true },
+    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
     upgrades: {
     },
     clickables: {
         11: {
-            title: "Stretching",
-            display: "Warm-up time",
+            title: "Fencing",
+            display: "Demands precise, agile movements and quick reflexes.",
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
+                player[this.layer].currAdd(click_value)
             },
         },
         12: {
-            title: "Somersaults",
-            display: "Wheee!",
-            canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
-            },
-        },
-        21: {
-            title: "Juggle",
-            display: "<br>Requiresjuggling balls",
+            title: "Juggling",
+            display: "Improves hand–eye coordination and fine motor control. Requires juggling balls.",
             canClick() {
                 if (player['i']['inventory']['balls'] > 0) {
                     return true
                 }
                 return false
             },
-        },
-        22: {
-            title: "Card Tricks",
-            display: "<br>Requires a deck of cards",
-            canClick() {
-                if (player['i']['inventory']['cards'] > 0) {
-                    return true
-                }
-                return false
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player[this.layer].currAdd(click_value)
             },
         },
     },
@@ -84,18 +78,10 @@ addLayer("dex",{
             direction: RIGHT,
             width: 500,
             height: 16,
-            fillStyle: {'background-color': 'red'},
-            progress() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c / t
-            },
             unlocked: true,
-            display() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c + " / " + t
-            },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            progress()  { return player[this.layer].current.div(player[this.layer].target) },
+            display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
     tabFormat: [

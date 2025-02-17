@@ -20,18 +20,39 @@ addLayer("int",{
                 this.target = this.target.times(10)
             }
         },
+        rgb: {
+            r: 0x00,
+            g: 0x00,
+            b: 0xff,
+            nodecolor() {
+                return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
+            },
+            branchcolor() {
+                r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
+                return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+        },
     }},
-    color: "lightblue",
+    color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Intelligence Points",
     type: "none",
-    layerShown() { return (player[this.layer].points == 0) ? false : true },
+    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
     upgrades: {
     },
     clickables: {
         11: {
-            title: "Meditate",
-            display: "<br>Relax",
+            title: "Puzzle-Solving & Strategy Games",
+            display: "Sharpens analytical thinking.",
+            canClick: true,
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player[this.layer].currAdd(click_value)
+            },
+        },
+        12: {
+            title: "Learning a New Language or Subject",
+            display: "Challenges your mind and expands knowledge.",
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
@@ -48,18 +69,10 @@ addLayer("int",{
             direction: RIGHT,
             width: 500,
             height: 16,
-            fillStyle: {'background-color': 'lightblue'},
-            progress() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c / t
-            },
             unlocked: true,
-            display() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c + " / " + t
-            },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            progress()  { return player[this.layer].current.div(player[this.layer].target) },
+            display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
     tabFormat: [

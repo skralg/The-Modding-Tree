@@ -170,15 +170,17 @@ addLayer("c",{
     },
     infoboxes: {
     },
-    branches: [
-        ["str", "darkred"],
-        ["dex", "darkorange"],
-        ["con", "khaki"],
-        ["int", "blue"],
-        ["wis", "lightgreen"],
-        ["cha", "violet"],
-        ["e", "white"]
-    ],
+    branches() {
+        return [
+            ["str", player["str"].rgb.branchcolor()],
+            ["dex", player["dex"].rgb.branchcolor()],
+            ["con", player["con"].rgb.branchcolor()],
+            ["int", player["int"].rgb.branchcolor()],
+            ["wis", player["wis"].rgb.branchcolor()],
+            ["cha", player["cha"].rgb.branchcolor()],
+            ["e", "white"]
+        ]
+    },
 })
 
 addLayer("e", {

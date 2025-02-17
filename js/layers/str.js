@@ -20,18 +20,30 @@ addLayer("str",{
                 this.target = this.target.times(10)
             }
         },
+        rgb: {
+            r: 0xff,
+            g: 0x00,
+            b: 0x00,
+            nodecolor() {
+                return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
+            },
+            branchcolor() {
+                r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
+                return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+        },
     }},
-    color: "red",
+    color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Strength Points",
     type: "none",
-    layerShown() { return (player[this.layer].points == 0) ? false : true },
+    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
     upgrades: {
     },
     clickables: {
         11: {
-            title: "Push-ups",
-            display: "<br>Requires arms",
+            title: "Weight lifting & Resistance Training",
+            display: "Focus on compound lifts (squats, deadlifts) to build raw power",
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
@@ -39,8 +51,8 @@ addLayer("str",{
             },
         },
         12: {
-            title: "Pull-ups",
-            display: "<br>Requires arms",
+            title: "Rock Climbing",
+            display: "Challenges muscles, grip strength, and overall power.",
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
@@ -81,18 +93,10 @@ addLayer("str",{
             direction: RIGHT,
             width: 500,
             height: 16,
-            fillStyle: {'background-color': 'red'},
-            progress() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c / t
-            },
             unlocked: true,
-            display() {
-                c = player[this.layer].current
-                t = player[this.layer].target
-                return c + " / " + t
-            },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            progress()  { return player[this.layer].current.div(player[this.layer].target) },
+            display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
     milestones: {
