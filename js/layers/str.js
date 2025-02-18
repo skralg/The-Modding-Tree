@@ -24,12 +24,16 @@ addLayer("str",{
             r: 0xff,
             g: 0x00,
             b: 0x00,
+            l: "STR",
             nodecolor() {
                 return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
             },
             branchcolor() {
                 r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
                 return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+            label() {
+                return "<span style='background-color:" + this.nodecolor() + "'>" + this.l + "</span>"
             },
         },
     }},
@@ -77,6 +81,44 @@ addLayer("str",{
             display: "<br>Requires a pick",
             canClick() {
                 return (player['e']['equipment']['pick'] == 0) ? false : true
+            },
+        },
+        31: {
+            title: "Martial Arts",
+            display() {
+                str = player.str.rgb.label()
+                dex = player.dex.rgb.label()
+                label = str + " " + dex + "<br>"
+                return  label + "Combines raw power with agile, precise movements."
+            },
+            canClick() {
+                if (player.str.points.eq(0)) return false;
+                if (player.dex.points.eq(0)) return false;
+                return true
+            },
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player.str.currAdd(click_value)
+                player.dex.currAdd(click_value)
+            },
+        },
+        32: {
+            title: "Obstacle Course Races",
+            display() {
+                str = player.str.rgb.label()
+                con = player.con.rgb.label()
+                label = str + " " + con + "<br>"
+                return  label + "Tasks you with physically demanding challenges over time."
+            },
+            canClick() {
+                if (player.str.points.eq(0)) return false;
+                if (player.con.points.eq(0)) return false;
+                return true
+            },
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player.str.currAdd(click_value)
+                player.con.currAdd(click_value)
             },
         },
     },

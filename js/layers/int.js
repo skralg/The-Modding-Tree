@@ -24,12 +24,16 @@ addLayer("int",{
             r: 0x00,
             g: 0x00,
             b: 0xff,
+            l: "INT",
             nodecolor() {
                 return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
             },
             branchcolor() {
                 r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
                 return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+            label() {
+                return "<span style='background-color:" + this.nodecolor() + "'>" + this.l + "</span>"
             },
         },
     }},

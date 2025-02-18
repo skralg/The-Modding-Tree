@@ -24,12 +24,16 @@ addLayer("con",{
             r: 0xff,
             g: 0xff,
             b: 0x00,
+            l: "CON",
             nodecolor() {
                 return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
             },
             branchcolor() {
                 r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
                 return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+            label() {
+                return "<span style='background-color:" + this.nodecolor() + "'>" + this.l + "</span>"
             },
         },
     }},
@@ -71,6 +75,25 @@ addLayer("con",{
                     player[this.layer].points = player[this.layer].points.add(1)
                     player[this.layer].target = player[this.layer].target.mul(10)
                 }
+            },
+        },
+        21: {
+            title: "Obstacle Course Races",
+            display() {
+                str = player.str.rgb.label()
+                con = player.con.rgb.label()
+                label = str + " " + con + "<br>"
+                return  label + "Tasks you with physically demanding challenges over time."
+            },
+            canClick() {
+                if (player.str.points.eq(0)) return false;
+                if (player.con.points.eq(0)) return false;
+                return true
+            },
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player.str.currAdd(click_value)
+                player.con.currAdd(click_value)
             },
         },
     },

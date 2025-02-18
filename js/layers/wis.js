@@ -24,12 +24,16 @@ addLayer("wis",{
             r: 0x00,
             g: 0x7f,
             b: 0x00,
+            l: "WIS",
             nodecolor() {
                 return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
             },
             branchcolor() {
                 r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
                 return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+            label() {
+                return "<span style='background-color:" + this.nodecolor() + "'>" + this.l + "</span>"
             },
         },
     }},

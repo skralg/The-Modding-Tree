@@ -24,12 +24,16 @@ addLayer("dex",{
             r: 0xff,
             g: 0xa5,
             b: 0x00,
+            l: "DEX",
             nodecolor() {
                 return "rgb(" + this.r + ", " + this.g + ", " + this.b + ")"
             },
             branchcolor() {
                 r = this.r >> 1; g = this.g >> 1; b = this.b >> 1
                 return "rgb(" + r + ", " + g + ", " + b + ")"
+            },
+            label() {
+                return "<span style='background-color:" + this.nodecolor() + "'>" + this.l + "</span>"
             },
         },
     }},
@@ -62,6 +66,25 @@ addLayer("dex",{
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
                 player[this.layer].currAdd(click_value)
+            },
+        },
+        31: {
+            title: "Martial Arts",
+            display() {
+                str = player.str.rgb.label()
+                dex = player.dex.rgb.label()
+                label = str + " " + dex + "<br>"
+                return  label + "Combines raw power with agile, precise movements."
+            },
+            canClick() {
+                if (player.str.points.eq(0)) return false;
+                if (player.dex.points.eq(0)) return false;
+                return true
+            },
+            onClick() {
+                click_value = 1 // 1 point of upgrade for this clickable
+                player.str.currAdd(click_value)
+                player["dex"].currAdd(click_value)
             },
         },
     },
