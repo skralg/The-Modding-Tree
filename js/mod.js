@@ -5,7 +5,8 @@ let modInfo = {
 	modFiles: [
 		"layers.js", "tree.js",
 		"layers/str.js", "layers/dex.js", "layers/con.js",
-		"layers/int.js", "layers/wis.js", "layers/cha.js"
+		"layers/int.js", "layers/wis.js", "layers/cha.js",
+		"layers/map.js"
 	],
 
 	discordName: "",
@@ -16,13 +17,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
-	name: "Character Generation",
+	num: "0.3",
+	name: "Quests, Map",
 }
 
 let changelog = `<h1>Change Log:</h1><br>
-	<h3>v0.1</h3><br>
-		- Initial creation`
+<h3>v0.1</h3><br>
+Initial creation<br>
+<h3>v0.2</h3><br>
+Character attributes<br>
+<h3>v0.3</h3><br>
+Quests, Map<br>`
 
 let winText = `gg!`
 

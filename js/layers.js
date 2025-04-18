@@ -279,6 +279,11 @@ addLayer("e", {
             display() { return "<br>Level " + player[this.layer].equipment.feet },
             style: {'background-color': 'gray'},
         },
+        81: {
+            title: "Axe",
+            display() { return "<br>Level " + player[this.layer].equipment.axe },
+            style: {'background-color': 'gray'},
+        },
     },
     buyables: {
     },
@@ -313,8 +318,8 @@ addLayer("i",{
     },
     clickables: {
         11: {
-            title: "Wood",
-            display() { return "<br>" + player[this.layer].inventory.wood },
+            title() { return "<h2>Wood</h2>" },
+            display() { return '<h2>' + player[this.layer].inventory.wood + '</h2>'},
             canClick: false,
             style: {'background-color': 'saddlebrown'},
         },
@@ -329,7 +334,7 @@ addLayer("pve", {
     name: "Training Ground", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "PvE", // This appears on the layer's node. Default is the id with the first letter capitalized
     row: 0, // Row the layer is in on the tree (0 is the first row)
-    position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
@@ -432,12 +437,11 @@ addLayer("pve", {
     },
 })
 
-
 addLayer("pvp", {
     name: "Training Ground Version 2", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "PvP", // This appears on the layer's node. Default is the id with the first letter capitalized
     row: 0, // Row the layer is in on the tree (0 is the first row)
-    position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 5, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
@@ -565,4 +569,69 @@ addLayer("pvp", {
             ],
         ],
     ],
+})
+
+addLayer("q", {
+    name: "Quests",
+    symbol: "Q",
+    row: 0,
+    position: 3,
+    startData() {return {
+        unlocked: true,
+        points: new Decimal(0),
+    }},
+    color: "#ccccff",
+    resource: "Fame",
+    type: "none",
+    layerShown() { return true },
+    infoboxes: {
+        quests: {
+            title: 'Quest Log and Status',
+            body: "Quests are one of the ways to make the numbers go up.<br>TODO: Lock questing behind ... something.",
+        },
+    },
+    challenges: {
+        11: {
+            name() {
+                return 'Gear up ' + challengeCompletions(this.layer, 11) + '/10';
+            },
+            completionLimit: 10,
+            challengeDescription() {
+                completes = challengeCompletions(this.layer, 11);
+                if (completes == 0) return 'We have to figure out how to get some wood, so we can build things.<br>';
+
+                return 'Challenge ' + (completes + 1) + ' has not been developed yet';
+            },
+            goalDescription() {
+                completes = challengeCompletions(this.layer, 11);
+                if (completes == 0) return  'Find an axe<br>';
+
+                return 'Goal ' + (completes + 1) + ' is not implemented';
+            },
+            rewardDescription() {
+                completes = challengeCompletions(this.layer, 11);
+                if (completes == 0) return 'The STR ability to chop down trees to obtain wood.';
+
+                return 'Reward ' + (completes + 1) + ' is not implemented';
+            },
+            canComplete() {
+                completes = challengeCompletions(this.layer, 11);
+                if (completes == 0) return hasUpgrade('m', 31);
+
+                return false;
+            },
+            onComplete() {
+                completes = challengeCompletions(this.layer, 11);
+                if (completes == 0) return player['e'].equipment.axe = 1;
+
+                alert('Q layer challenge 11 completion ' + completes + ' has no onComplete()!');
+            },
+        },
+    },
+    tabFormat: [
+        'main-display',
+        ['infobox', 'quests'],
+        'challenges',
+    ],
+    branches() {return [["m", "white"]]},
 })
