@@ -9,68 +9,63 @@ addLayer("c",{
     }},
     color: "gray",
     requires: new Decimal(0),
-    resource: "Hit Points",
+    resource: "Attribute Points",
     type: "none",
-    layerShown() { return true},
+    layerShown: true,
+    shouldNotify() {
+        // No points, no notify
+        if (player.c.points.eq(0)) return false;
+        // If we have points, and locked attributes, notify
+        if (player.str.points.eq(0)) return true;
+        if (player.dex.points.eq(0)) return true;
+        if (player.con.points.eq(0)) return true;
+        if (player.int.points.eq(0)) return true;
+        if (player.wis.points.eq(0)) return true;
+        if (player.cha.points.eq(0)) return true;
+    },
     upgrades: {
     },
     clickables: {
         11: {
             title: "Cheat+1",
-            display() { return "Add 1 point" },
+            display: "Add 1 point",
             canClick: true,
             onClick() { player[this.layer].points = player[this.layer].points.add(1) },
         },
         12: {
             title: "Cheat*10",
-            display() { return "10x points" },
-            canClick() { return true },
+            display: "10x points",
+            canClick: true,
             onClick() { player[this.layer].points = player[this.layer].points.mul(10) },
         },
         21: {
             title: "Get Strong",
-            display: "Strength Training",
-            style() {
-                return {'background-color': 'red'}
+            display() {
+                if (player.str.points.gt(0)) return 'Strength Training Unlocked!';
+                return 'Unlock Strength Training<br>Cost: 1 Attribute Point';
             },
-            unlocked() {
-                if (player["str"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["str"].points == 0 && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'background-color': 'red'},
+            unlocked: true,
+            marked() { return player.str.points.gt(0) },
+            canClick() { return player.str.points.eq(0) },
             onClick() {
-                player["str"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.str.points = new Decimal(1);
+                player.c.points = player.c.points.sub(1);
             },
         },
         22: {
             title: "Get Fast",
-            display: "Dexterity Training",
-            style() {
-                return {'background-color': 'orange'}
+            display() {
+                if (player.dex.points.gt(0)) return 'Dexterity Training Unlocked!';
+                return 'Unlock Dexterity Training<br>Cost: 1 Attribute Point';
             },
-            unlocked() {
-                if (player["dex"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["dex"].points.eq(0) && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'background-color': 'orange'},
+            unlocked: true,
+            marked() { return player.dex.points.gt(0) },
+            canClick() { return player.dex.points.eq(0) },
             onClick() {
-                player["dex"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.dex.points = new Decimal(1);
+                player.c.points = player.c.points.sub(1);
             },
         },
         31: {
@@ -172,12 +167,12 @@ addLayer("c",{
     },
     branches() {
         return [
-            ["str", player["str"].rgb.branchcolor()],
-            ["dex", player["dex"].rgb.branchcolor()],
-            ["con", player["con"].rgb.branchcolor()],
-            ["int", player["int"].rgb.branchcolor()],
-            ["wis", player["wis"].rgb.branchcolor()],
-            ["cha", player["cha"].rgb.branchcolor()],
+            ["str", player.str.rgb.branchcolor()],
+            ["dex", player.dex.rgb.branchcolor()],
+            ["con", player.con.rgb.branchcolor()],
+            ["int", player.int.rgb.branchcolor()],
+            ["wis", player.wis.rgb.branchcolor()],
+            ["cha", player.cha.rgb.branchcolor()],
             ["e", "white"]
         ]
     },
@@ -191,97 +186,79 @@ addLayer("e", {
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
-        equipment: {
-            // armor
-            head: 0,
-            shoulders: 0,
-            neck: 0,
-            arms: 0,
-            hands: 0,
-            ring: 0,
-            body: 0,
-            waist: 0,
-            legs: 0,
-            feet: 0,
-            weapon: 0,
-            shield: 0,
-            // tools
-            axe: 0,
-            pick: 0,
-        }
     }},
     color: "#3333FF",
     requires: new Decimal(0),
     resource: "Weight Allowance",
     type: "none",
-    layerShown() {return true},
+    layerShown() { return player.str.points.gte(2) },
     upgrades: {
     },
     clickables: {
         11: {
             title: "Head",
-            display() { return "<br>Level " + player[this.layer].equipment.head },
+            display() { return "<br>Level " + player.head },
             canClick: false,
             style: {'background-color': 'gray'},
         },
         21: {
             title: "Shoulders",
-            display() { return "<br>Level " + player[this.layer].equipment.shoulders },
+            display() { return "<br>Level " + player.shoulders },
             style: {'background-color': 'gray'},
         },
         23: {
             title: "Neck",
-            display() { return "<br>Level " + player[this.layer].equipment.neck },
+            display() { return "<br>Level " + player.neck },
             style: {'background-color': 'gray'},
         },
         31: {
             title: "Arms",
-            display() { return "<br>Level " + player[this.layer].equipment.arms },
+            display() { return "<br>Level " + player.arms },
             style: {'background-color': 'gray'},
         },
         32: {
             title: "Body",
-            display() { return "<br>Level " + player[this.layer].equipment.body },
+            display() { return "<br>Level " + player.body },
             style: {'background-color': 'gray'},
         },
         33: {
            title: "Ring",
-           display() { return "<br>Level " + player[this.layer].equipment.ring },
+           display() { return "<br>Level " + player.ring },
            style: {'background-color': 'gray'},
         },
         51: {
             title: "Weapon",
-            display() { return "<br>Level " + player[this.layer].equipment.weapon },
+            display() { return "<br>Level " + player.weapon },
             style: {'background-color': 'gray'},
         },
         52: {
             title: "Hands",
-            display() { return "<br>Level " + player[this.layer].equipment.hands },
+            display() { return "<br>Level " + player.hands },
             style: {'background-color': 'gray'},
         },
         53: {
             title: "Waist",
-            display() { return "<br>Level " + player[this.layer].equipment.waist },
+            display() { return "<br>Level " + player.waist },
             style: {'background-color': 'gray'},
         },
         54: {
             title: "Shield",
-            display() { return "<br>Level " + player[this.layer].equipment.shield },
+            display() { return "<br>Level " + player.shield },
             style: {'background-color': 'gray'},
         },
         61: {
             title: "Legs",
-            display() { return "<br>Level " + player[this.layer].equipment.legs },
+            display() { return "<br>Level " + player.legs },
             style: {'background-color': 'gray'},
         },
         71: {
             title: "Feet",
-            display() { return "<br>Level " + player[this.layer].equipment.feet },
+            display() { return "<br>Level " + player.feet },
             style: {'background-color': 'gray'},
         },
         81: {
             title: "Axe",
-            display() { return "<br>Level " + player[this.layer].equipment.axe },
+            display() { return "<br>Level " + player.axe },
             style: {'background-color': 'gray'},
         },
     },
@@ -304,22 +281,19 @@ addLayer("i",{
         points: new Decimal(0),
         inventory: {
             // misc
-            balls: 0,
-            cards: 0,
-            wood: 0,
         }
     }},
     color: "white",
     requires: new Decimal(0),
     resource: "Extra Backpack Slots",
     type: "none",
-    layerShown: true,
+    layerShown() { return player.str.points.gte(3) },
     upgrades: {
     },
     clickables: {
         11: {
             title() { return "<h2>Wood</h2>" },
-            display() { return '<h2>' + player[this.layer].inventory.wood + '</h2>'},
+            display() { return '<h2>' + player.wood + '</h2>'},
             canClick: false,
             style: {'background-color': 'saddlebrown'},
         },
@@ -356,7 +330,7 @@ addLayer("pve", {
     hotkeys: [
         {key: "T", description: "T: Click for 1 Dagger Stab", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown() {return true},
+    layerShown() {return false},
     upgrades: {
         11: {
             title: "Upgrade Dagger",
@@ -463,7 +437,7 @@ addLayer("pvp", {
     hotkeys: [
         {key: "T", description: "T: Click for 1 Dagger Stab", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown() {return true},
+    layerShown() {return false},
     upgrades: {
         11: {
             title: "Upgrade Dagger",
@@ -574,8 +548,8 @@ addLayer("pvp", {
 addLayer("q", {
     name: "Quests",
     symbol: "Q",
-    row: 0,
-    position: 3,
+    row: 1,
+    position: 5,
     startData() {return {
         unlocked: true,
         points: new Decimal(0),
@@ -583,11 +557,11 @@ addLayer("q", {
     color: "#ccccff",
     resource: "Fame",
     type: "none",
-    layerShown() { return true },
+    layerShown() { return player.int.points.gt(3) },
     infoboxes: {
         quests: {
             title: 'Quest Log and Status',
-            body: "Quests are one of the ways to make the numbers go up.<br>TODO: Lock questing behind ... something.",
+            body: "Quests are one of the ways to make the numbers go up.",
         },
     },
     challenges: {
@@ -622,7 +596,7 @@ addLayer("q", {
             },
             onComplete() {
                 completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return player['e'].equipment.axe = 1;
+                if (completes == 0) return player.axe = 1;
 
                 alert('Q layer challenge 11 completion ' + completes + ' has no onComplete()!');
             },

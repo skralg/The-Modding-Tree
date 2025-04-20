@@ -37,6 +37,10 @@ addLayer("int",{
             },
         },
     }},
+    //style: {'color': 'white'},
+    componentStyles: {
+        "clickables"() { return {'h2': 'white' } },
+    },
     color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Intelligence Points",
@@ -48,6 +52,7 @@ addLayer("int",{
         11: {
             title: "Puzzle-Solving & Strategy Games",
             display: "Sharpens analytical thinking.",
+            style: {'color': '#c0c0c0'},
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
@@ -57,6 +62,7 @@ addLayer("int",{
         12: {
             title: "Learning a New Language or Subject",
             display: "Challenges your mind and expands knowledge.",
+            style: {'color': '#c0c0c0'},
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable

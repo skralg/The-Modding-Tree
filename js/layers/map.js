@@ -1,8 +1,8 @@
 addLayer('m', {
     name: 'Map',
     symbol: 'M',
-    row: 1,
-    position: 5,
+    row: 0,
+    position: 3,
     componentStyles: {
         clickable() {return {'margin': '10px'}},
         //upgrade()   {return {'margin': '5px'}},
@@ -42,7 +42,7 @@ addLayer('m', {
             },
         }
     },
-    layerShown() { return true },
+    layerShown() { return player.map > 0 },
     infoboxes: {
         maps: {
             title: 'The Magical Map of the Known Realms',
@@ -311,7 +311,7 @@ addLayer('m', {
             description: 'Cheerful',
             cost: new Decimal(100),
             currencyDisplayName: 'Wood',
-            currencyLocation() { return player['i'].inventory.wood },
+            currencyLocation() { return player.wood },
             unlocked() {
                 // Visible everywhere if bought, else only when you are at the Village
                 return hasUpgrade(this.layer, 11) || player[this.layer].location == 45;

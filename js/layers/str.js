@@ -37,11 +37,11 @@ addLayer("str",{
             },
         },
     }},
-    color() { return player[this.layer].rgb.nodecolor() },
+    color() { return player.str.rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Strength Points",
     type: "none",
-    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
+    layerShown() { return !player.str.points.eq(0) },
     upgrades: {
     },
     clickables: {
@@ -51,7 +51,7 @@ addLayer("str",{
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
+                player.str.currAdd(click_value)
             },
         },
         12: {
@@ -60,28 +60,24 @@ addLayer("str",{
             canClick: true,
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
+                player.str.currAdd(click_value)
             },
         },
         21: {
             title: "Chop wood",
             display: "<br>Requires an axe",
-            canClick() {
-                return (player['e']['equipment']['axe'] == 0) ? false : true
-            },
+            canClick() { return player.axe > 0 },
             onClick() {
                 click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
+                player.str.currAdd(click_value)
                 // might need to be modified later
-                player["i"]["inventory"]["wood"] += click_value
+                player.wood += click_value
             },
         },
         22: {
             title: "Mine ore",
             display: "<br>Requires a pick",
-            canClick() {
-                return (player['e']['equipment']['pick'] == 0) ? false : true
-            },
+            canClick() { return player.pick > 0 },
         },
         31: {
             title: "Martial Arts",
@@ -128,7 +124,7 @@ addLayer("str",{
         top: {
             title: "Strength Training",
             body: "Let's get strong!",
-        }
+        },
     },
     bars: {
         b1: {
@@ -136,21 +132,33 @@ addLayer("str",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
-            progress()  { return player[this.layer].current.div(player[this.layer].target) },
-            display()   { return player[this.layer].current + " / " + player[this.layer].target },
+            fillStyle() { return {'background-color': player.str.rgb.nodecolor()}  },
+            progress()  { return player.str.current.div(player.str.target) },
+            display()   { return player.str.current + " / " + player.str.target },
         },
     },
     milestones: {
         0: {
-            requirementDescription: "1 Milestone Point",
-            effectDescription: "Feel Good",
-            done() { return player[this.layer].points.gte(1) },
+            requirementDescription: "2 Strength Points",
+            effectDescription: "Unlock Equipment",
+            done() { return player.str.points.gte(2) },
+            unlocked() { return player.str.points.gte(2) },
+            style: { 'background-color': 'red' },
         },
         1: {
-            requirementDescription: "2 Milestone Points",
-            effectDescription: "Feel better",
-            done() { return player[this.layer].points.gte(2) },
+            requirementDescription: "3 Strength Points",
+            effectDescription: "Unlock Inventory",
+            done() { return player.str.points.gte(3) },
+            unlocked() { return player.str.points.gte(3) },
+            style: { 'background-color': 'red' },
+        },
+        2: {
+            requirementDescription: "4 Strength Points",
+            effectDescription: "Gain another Character Attribute Point",
+            done() { return player.str.points.gte(4) },
+            unlocked() { return player.str.points.gte(4) },
+            onComplete() { player.c.points = player.c.points.add(1) },
+            style: { 'background-color': 'red' },
         },
     },
     tabFormat: [

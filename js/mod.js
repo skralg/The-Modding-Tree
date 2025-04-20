@@ -15,6 +15,7 @@ let modInfo = {
 	offlineLimit: 1,  // In hours
 }
 
+
 // Set your version in num and name
 let VERSION = {
 	num: "0.3",
@@ -55,6 +56,28 @@ function getPointGen() {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	// equipment: armor
+	head: 0,
+	shoulders: 0,
+	neck: 0,
+	arms: 0,
+	hands: 0,
+	ring: 0,
+	body: 0,
+	waist: 0,
+	legs: 0,
+	feet: 0,
+	weapon: 0,
+	shield: 0,
+	// equipment: tools
+	axe: 0,
+	pick: 0,
+	backpack: 0,
+	map: 0,
+	// Inventory
+	balls: 0,
+	cards: 0,
+	wood: 0,
 }}
 
 // Display extra things at the top of the page
