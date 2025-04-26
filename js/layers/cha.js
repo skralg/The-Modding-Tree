@@ -5,6 +5,7 @@ addLayer("cha",{
     position: 0,
     startData() { return {
         unlocked: true,
+        name: 'Charisma', // makes it available sooner to functions
         points: new Decimal(0),
         // Current and Target for point skillup
         current: new Decimal(0),
@@ -41,32 +42,24 @@ addLayer("cha",{
     requires: new Decimal(0),
     resource: "Charisma Points",
     type: "none",
-    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
+    layerShown: false, // microtab embedded
     upgrades: {
     },
     clickables: {
         11: {
-            title: "Improv Theater or Acting Workshops",
-            display: "Boosts confidence and interpersonal flair.",
+            title: "Improv Theater",
+            display: "<br>Boosts confidence and interpersonal flair.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         12: {
-            title: "Public Speaking Clubs",
-            display: "Refines persuasive communication skills.",
+            title: "Speaking Clubs",
+            display: "<br>Refines persuasive communication skills.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
     },
     buyables: {
-    },
-    infoboxes: {
     },
     bars: {
         b1: {
@@ -74,18 +67,37 @@ addLayer("cha",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()} },
             progress()  { return player[this.layer].current.div(player[this.layer].target) },
             display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
+    milestones: {
+        0: {
+            requirementDescription: "4 Charisma Points",
+            effectDescription: "Gain another Character Attribute Point",
+            done() { return player.cha.points.gte(4) },
+            unlocked() { return player.cha.points.gte(4) },
+            onComplete() { player.c.points = player.c.points.add(1) },
+            style: { 'background-color': 'purple' },
+        },
+    },
     tabFormat: [
-        ["infobox", "top"],
-        "main-display",
-        "blank",
-        ["bar", "b1"],
-        "blank",
-        "clickables",
-        "milestones",
+        ['raw-html', '<h2>Charisma measures your ability to interact effectively with others. It includes such factors as confidence and eloquence, and it can represent a charming or commanding personality.</h2>'],
+        'blank',
+        ['raw-html', function() {
+            color = player.cha.rgb.nodecolor()
+            pts = player[this.layer].points
+            name = player[this.layer].name
+            return 'You have invested <h2 style="color: ' + color +
+                   '; text-shadow: ' + color + ' 0px 0px 10px;">' +
+                   pts + '</h2> Attribute Points in ' + name
+        }],
+        'blank',
+        ['bar', 'b1'],
+        'blank',
+        'clickables',
+        'blank',
+        'milestones',
     ],
 })

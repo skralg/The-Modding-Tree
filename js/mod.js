@@ -1,3 +1,7 @@
+// The Dungeons & Dragons SRD v5.2 has been referenced for these works. They hold a Creative Commons license.
+// AI such as ChatGPT has been used for some creative upgrade and clickable text, but never for code.
+// Not that I'm against AI writing code, just that I enjoy writing it myself.
+
 let modInfo = {
 	name: "The RPG Tree",
 	author: "simple",
@@ -57,27 +61,27 @@ function getPointGen() {
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
 	// equipment: armor
-	head: 0,
-	shoulders: 0,
-	neck: 0,
-	arms: 0,
-	hands: 0,
-	ring: 0,
-	body: 0,
-	waist: 0,
-	legs: 0,
-	feet: 0,
-	weapon: 0,
-	shield: 0,
+	head: new Decimal(0),
+	shoulders: new Decimal(0),
+	neck: new Decimal(0),
+	arms: new Decimal(0),
+	hands: new Decimal(0),
+	ring: new Decimal(0),
+	body: new Decimal(0),
+	waist: new Decimal(0),
+	legs: new Decimal(0),
+	feet: new Decimal(0),
+	weapon: new Decimal(0),
+	shield: new Decimal(0),
 	// equipment: tools
-	axe: 0,
-	pick: 0,
-	backpack: 0,
-	map: 0,
+	axe: new Decimal(0),
+	pick: new Decimal(0),
+	backpack: new Decimal(0),
+	map: new Decimal(0),
 	// Inventory
-	balls: 0,
-	cards: 0,
-	wood: 0,
+	balls: new Decimal(0),
+	cards: new Decimal(0),
+	wood: new Decimal(0),
 }}
 
 // Display extra things at the top of the page

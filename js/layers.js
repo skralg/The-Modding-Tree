@@ -1,3 +1,22 @@
+function abilityModifier(points) {
+    if (points == 0 || points == 1) return -5;
+    if (points == 2 || points == 3) return -4;
+    if (points == 4 || points == 5) return -3;
+    if (points == 6 || points == 7) return -2;
+    if (points == 8 || points == 9) return -1;
+    if (points == 10 || points == 11) return 0;
+    if (points == 12 || points == 13) return 1;
+    if (points == 14 || points == 15) return 2;
+    if (points == 16 || points == 17) return 3;
+    if (points == 18 || points == 19) return 4;
+    if (points == 20 || points == 21) return 5;
+    if (points == 22 || points == 23) return 6;
+    if (points == 24 || points == 25) return 7;
+    if (points == 26 || points == 27) return 8;
+    if (points == 28 || points == 29) return 9;
+    if (points == 30) return 10;
+}
+
 addLayer("c",{
     name: "Character",
     symbol: "C",
@@ -9,13 +28,17 @@ addLayer("c",{
     }},
     color: "gray",
     requires: new Decimal(0),
-    resource: "Attribute Points",
+    resource: "Ability Points",
     type: "none",
     layerShown: true,
+    componentStyles: {
+        clickable: {'border-radius': '10%'},
+        microtabs: {'align-self': 'flex-start', 'margin': '5px', 'border-width': '0px'},
+    },
     shouldNotify() {
         // No points, no notify
         if (player.c.points.eq(0)) return false;
-        // If we have points, and locked attributes, notify
+        // If we have points, and locked abilities, notify
         if (player.str.points.eq(0)) return true;
         if (player.dex.points.eq(0)) return true;
         if (player.con.points.eq(0)) return true;
@@ -26,138 +49,166 @@ addLayer("c",{
     upgrades: {
     },
     clickables: {
-        11: {
+        cheat1: {
             title: "Cheat+1",
-            display: "Add 1 point",
+            display: "<br>Add 1 Ability point<br><br>",
             canClick: true,
             onClick() { player[this.layer].points = player[this.layer].points.add(1) },
         },
-        12: {
+        cheat10: {
             title: "Cheat*10",
-            display: "10x points",
+            display: "<br>Multiply Ability points by 10",
             canClick: true,
             onClick() { player[this.layer].points = player[this.layer].points.mul(10) },
         },
-        21: {
+        STR: {
             title: "Get Strong",
             display() {
-                if (player.str.points.gt(0)) return 'Strength Training Unlocked!';
-                return 'Unlock Strength Training<br>Cost: 1 Attribute Point';
+                if (player.str.points.gt(0)) return '<br><br>Strength Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Strength</b><br><br>Cost: 1 Ability Point'
             },
-            style: {'background-color': 'red'},
-            unlocked: true,
-            marked() { return player.str.points.gt(0) },
+            style: {'margin': '5px'},
             canClick() { return player.str.points.eq(0) },
             onClick() {
-                player.str.points = new Decimal(1);
-                player.c.points = player.c.points.sub(1);
+                player.str.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
             },
         },
-        22: {
+        DEX: {
             title: "Get Fast",
             display() {
-                if (player.dex.points.gt(0)) return 'Dexterity Training Unlocked!';
-                return 'Unlock Dexterity Training<br>Cost: 1 Attribute Point';
+                if (player.dex.points.gt(0)) return '<br><br>Dexterity Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Dexterity</b><br><br>Cost: 1 Ability Point'
             },
-            style: {'background-color': 'orange'},
-            unlocked: true,
-            marked() { return player.dex.points.gt(0) },
+            style: {'margin': '5px'},
             canClick() { return player.dex.points.eq(0) },
             onClick() {
-                player.dex.points = new Decimal(1);
-                player.c.points = player.c.points.sub(1);
+                player.dex.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
             },
         },
-        31: {
+        CON: {
             title: "Get Tough",
-            display: "Constitution Training",
-            style() {
-                return {'background-color': 'yellow'}
+            display() {
+                if (player.con.points.gt(0)) return '<br><br>Constitution Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Constitution</b><br><br>Cost: 1 Ability Point'
             },
-            unlocked() {
-                if (player["con"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["con"].points.eq(0) && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'margin': '5px'},
+            canClick() { return player.con.points.eq(0) },
             onClick() {
-                player["con"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.con.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
             },
         },
-        32: {
+        INT: {
             title: "Get Smart",
-            display: "Intelligence Training",
-            style() {
-                return {'background-color': 'lightblue'}
+            display() {
+                if (player.int.points.gt(0)) return '<br><br>Intelligence Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Intelligence</b><br><br>Cost: 1 Ability Point'
             },
-            unlocked() {
-                if (player["int"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["int"].points.eq(0) && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'margin': '5px'},
+            canClick() { return player.int.points.eq(0) },
             onClick() {
-                player["int"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.int.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
             },
         },
-        41: {
+        WIS: {
             title: "Get Wise",
-            display: "Wisdom Training",
-            style() {
-                return {'background-color': 'green'}
+            display() {
+                if (player.wis.points.gt(0)) return '<br><br>Wisdom Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Wisdom</b><br><br>Cost: 1 Ability Point'
             },
-            unlocked() {
-                if (player["wis"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["wis"].points.eq(0) && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'margin': '5px'},
+            canClick() { return player.wis.points.eq(0) },
             onClick() {
-                player["wis"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.wis.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
             },
         },
-        42: {
+        CHA: {
             title: "Get Nice",
-            display: "Charisma Training",
-            style() {
-                return {'background-color': 'purple'}
+            display() {
+                if (player.cha.points.gt(0)) return '<br><br>Charisma Training Unlocked!<br><br><br>'
+                return '<br>Unlock Training: <b>Charisma</b><br><br>Cost: 1 Ability Point'
             },
-            unlocked() {
-                if (player["cha"].points.eq(0)) {
-                    return true
-                }
-                return false
-            },
-            canClick() {
-                if (player["cha"].points.eq(0) && player[this.layer].points.gt(0)) {
-                    return true
-                }
-                return false
-            },
+            style: {'margin': '5px'},
+            canClick() { return player.cha.points.eq(0) },
             onClick() {
-                player["cha"].points = new Decimal(1)
-                player[this.layer].points = player[this.layer].points.sub(1)
+                player.cha.points = new Decimal(1)
+                player.c.points = player.c.points.sub(1)
+            },
+        },
+        Strength: {
+            title: 'Strength',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.str.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
+            },
+        },
+        Dexterity: {
+            title: 'Dexterity',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.dex.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
+            },
+        },
+        Constitution: {
+            title: 'Constitution',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.con.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
+            },
+        },
+        Intelligence: {
+            title: 'Intelligence',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.int.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
+            },
+        },
+        Wisdom: {
+            title: 'Wisdom',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.wis.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
+            },
+        },
+        Charisma: {
+            title: 'Charisma',
+            tooltip: 'Ability Modifier boxed, Ability Score circled',
+            style: {'background-color': '#c0c0c0', 'width': '150px'},
+            display() {
+                pts = player.cha.points
+                mod = abilityModifier(pts)
+                if (mod < 0) {sign = ''} else {sign = '+'}
+                return '<div class="attrMod">' + sign + mod + '</div>' +
+                       '<div class="attrPts">' + pts + '</div>'
             },
         },
     },
@@ -176,7 +227,65 @@ addLayer("c",{
             ["e", "white"]
         ]
     },
+    microtabs: {
+        tabs: {
+            'Character': {
+                shouldNotify() { return player.c.points.gt(0) },
+                prestigeNotify() { return player.c.points.gt(0) },
+                glowColor: 'green',
+                content: [
+                    ['row', [['clickable', 'STR'], ['clickable', 'DEX'], ['clickable', 'CON']]],
+                    ['row', [['clickable', 'INT'], ['clickable', 'WIS'], ['clickable', 'CHA']]],
+                    'h-line',
+                    ['row', [['clickable', 'cheat1'], ['clickable', 'cheat10']]],
+                ],
+            },
+            'STR': {
+                buttonStyle: {'background-color': '#ff0000'},
+                unlocked() { return player.str.points.gt(0) },
+                embedLayer: 'str',
+            },
+            'DEX': {
+                buttonStyle: {'background-color': '#ffa500', 'color': 'black'},
+                unlocked() { return player.dex.points.gt(0) },
+                embedLayer: 'dex',
+            },
+            'CON': {
+                buttonStyle: {'background-color': '#ffff00', 'color': 'black'},
+                unlocked() { return player.con.points.gt(0) },
+                embedLayer: 'con',
+            },
+            'INT': {
+                buttonStyle: {'background-color': '#0000ff'},
+                unlocked() { return player.int.points.gt(0) },
+                embedLayer: 'int',
+            },
+            'WIS': {
+                buttonStyle: {'background-color': '#007f00'},
+                unlocked() { return player.wis.points.gt(0) },
+                embedLayer: 'wis',
+            },
+            'CHA': {
+                buttonStyle: {'background-color': '#7f007f'},
+                unlocked() { return player.cha.points.gt(0) },
+                embedLayer: 'cha',
+            },
+        },
+    },
+    tabFormat: [
+        'main-display',
+        ['row', [
+            ['clickable', 'Strength'],
+            ['clickable', 'Dexterity'],
+            ['clickable', 'Constitution'],
+            ['clickable', 'Intelligence'],
+            ['clickable', 'Wisdom'],
+            ['clickable', 'Charisma'],
+        ]],
+        ['microtabs', 'tabs']
+    ],
 })
+
 
 addLayer("e", {
     name: "Equipment",
@@ -189,7 +298,7 @@ addLayer("e", {
     }},
     color: "#3333FF",
     requires: new Decimal(0),
-    resource: "Weight Allowance",
+    resource: "Equipment Rating",
     type: "none",
     layerShown() { return player.str.points.gte(2) },
     upgrades: {
@@ -557,7 +666,7 @@ addLayer("q", {
     color: "#ccccff",
     resource: "Fame",
     type: "none",
-    layerShown() { return player.int.points.gt(3) },
+    layerShown() { return player.int.points.gte(3) },
     infoboxes: {
         quests: {
             title: 'Quest Log and Status',
@@ -596,7 +705,7 @@ addLayer("q", {
             },
             onComplete() {
                 completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return player.axe = 1;
+                if (completes == 1) return player.axe.eq(1);
 
                 alert('Q layer challenge 11 completion ' + completes + ' has no onComplete()!');
             },

@@ -5,6 +5,7 @@ addLayer("dex",{
     position: 1,
     startData() { return {
         unlocked: true,
+        name: 'Dexterity', // makes it available sooner to functions
         points: new Decimal(0),
         // Current and Target for point skillup
         current: new Decimal(0),
@@ -41,40 +42,34 @@ addLayer("dex",{
     requires: new Decimal(0),
     resource: "Dexterity Points",
     type: "none",
-    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
+    layerShown: false, // microtab embedded
     upgrades: {
     },
     clickables: {
         11: {
             title: "Fencing",
-            display: "Demands precise, agile movements and quick reflexes.",
+            display: "<br>Demands precise, agile movements and quick reflexes.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         12: {
             title: "Juggling",
-            display: "Improves hand–eye coordination and fine motor control. Requires juggling balls.",
+            display: "<br>Improve coordination. Requires juggling balls.",
             canClick() {
                 if (player['i']['inventory']['balls'] > 0) {
                     return true
                 }
                 return false
             },
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         31: {
             title: "Martial Arts",
             display() {
                 str = player.str.rgb.label()
                 dex = player.dex.rgb.label()
-                label = str + " " + dex + "<br>"
-                return  label + "Combines raw power with agile, precise movements."
+                label = str + " " + dex + "<br><br>"
+                return  label + "Combines power with precise movements."
             },
             canClick() {
                 if (player.str.points.eq(0)) return false;
@@ -82,19 +77,12 @@ addLayer("dex",{
                 return true
             },
             onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-                player["dex"].currAdd(click_value)
+                player[this.layer].currAdd(player[this.layer].points)
+                player.str.currAdd(player.str.points)
             },
         },
     },
     buyables: {
-    },
-    infoboxes: {
-        top: {
-            title: "Dexterity Training",
-            body: "Let's get nimble!",
-        }
     },
     bars: {
         b1: {
@@ -102,18 +90,37 @@ addLayer("dex",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()} },
             progress()  { return player[this.layer].current.div(player[this.layer].target) },
             display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
+    milestones: {
+        0: {
+            requirementDescription: "4 Dexterity Points",
+            effectDescription: "Gain another Character Attribute Point",
+            done() { return player.dex.points.gte(4) },
+            unlocked() { return player.dex.points.gte(4) },
+            onComplete() { player.c.points = player.c.points.add(1) },
+            style: { 'background-color': 'orange' },
+        },
+    },
     tabFormat: [
-        ["infobox", "top"],
-        "main-display",
-        "blank",
-        ["bar", "b1"],
-        "blank",
-        "clickables",
-        "milestones",
+        ['raw-html', '<h2>Dexterity measures agility, reflexes, and balance.</h2>'],
+        'blank',
+        ['raw-html', function() {
+            color = player.dex.rgb.nodecolor()
+            pts = player[this.layer].points
+            name = player[this.layer].name
+            return 'You have invested <h2 style="color: ' + color +
+                   '; text-shadow: ' + color + ' 0px 0px 10px;">' +
+                   pts + '</h2> Attribute Points in ' + name
+        }],
+        'blank',
+        ['bar', 'b1'],
+        'blank',
+        'clickables',
+        'blank',
+        'milestones',
     ],
 })

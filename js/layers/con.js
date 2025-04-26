@@ -5,6 +5,7 @@ addLayer("con",{
     position: 0,
     startData() { return {
         unlocked: true,
+        name: 'Constitution', // makes it available sooner to functions
         points: new Decimal(0),
         // Current and Target for point skillup
         current: new Decimal(0),
@@ -41,49 +42,29 @@ addLayer("con",{
     requires: new Decimal(0),
     resource: "Constitution Points",
     type: "none",
-    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
+    layerShown: false, // microtab embedded
     upgrades: {
     },
     clickables: {
         11: {
             title: "Endurance Running",
-            display: "Builds stamina and overall physical resilience.",
+            display: "<br>Builds stamina and overall physical resilience.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         12: {
-            title: "High-Intensity Interval Training",
-            display: "Boosts cardiovascular health and recovery.",
+            title: "Interval Training",
+            display: "<br>Boosts cardiovascular health and recovery.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].current = player[this.layer].current.add(click_value)
-                c = player[this.layer].current
-                t = player[this.layer].target
-                if (c.gte(t)) {
-                    player[this.layer].current = new Decimal(0)
-                    player[this.layer].points = player[this.layer].points.add(1)
-                    player[this.layer].target = player[this.layer].target.mul(10)
-                }
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         21: {
-            title: "Obstacle Course Races",
+            title: "Obstacle Courses",
             display() {
                 str = player.str.rgb.label()
                 con = player.con.rgb.label()
-                label = str + " " + con + "<br>"
-                return  label + "Tasks you with physically demanding challenges over time."
+                label = str + " " + con + "<br><br>"
+                return  label + "Physically demanding challenges over time."
             },
             canClick() {
                 if (player.str.points.eq(0)) return false;
@@ -91,9 +72,8 @@ addLayer("con",{
                 return true
             },
             onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-                player.con.currAdd(click_value)
+                player[this.layer].currAdd(player[this.layer].points)
+                player.str.currAdd(player.str.points)
             },
         },
     },
@@ -107,18 +87,37 @@ addLayer("con",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()} },
             progress()  { return player[this.layer].current.div(player[this.layer].target) },
             display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
+    milestones: {
+        0: {
+            requirementDescription: "4 Constitution Points",
+            effectDescription: "Gain another Character Attribute Point",
+            done() { return player.con.points.gte(4) },
+            unlocked() { return player.con.points.gte(4) },
+            onComplete() { player.c.points = player.c.points.add(1) },
+            style: { 'background-color': 'yellow' },
+        },
+    },
     tabFormat: [
-        ["infobox", "top"],
-        "main-display",
-        "blank",
-        ["bar", "b1"],
-        "blank",
-        "clickables",
-        "milestones",
+        ['raw-html', '<h2>Constitution measures health, stamina, and vital force.</h2>'],
+        'blank',
+        ['raw-html', function() {
+            color = player.con.rgb.nodecolor()
+            pts = player[this.layer].points
+            name = player[this.layer].name
+            return 'You have invested <h2 style="color: ' + color +
+                   '; text-shadow: ' + color + ' 0px 0px 10px;">' +
+                   pts + '</h2> Attribute Points in ' + name
+        }],
+        'blank',
+        ['bar', 'b1'],
+        'blank',
+        'clickables',
+        'blank',
+        'milestones',
     ],
 })

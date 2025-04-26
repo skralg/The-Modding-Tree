@@ -5,6 +5,7 @@ addLayer("int",{
     position: 1,
     startData() { return {
         unlocked: true,
+        name: 'Intelligence', // makes it available sooner to functions
         points: new Decimal(0),
         // Current and Target for point skillup
         current: new Decimal(0),
@@ -39,13 +40,13 @@ addLayer("int",{
     }},
     //style: {'color': 'white'},
     componentStyles: {
-        "clickables"() { return {'h2': 'white' } },
+        clickables: {'h2': 'white'},
     },
     color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Intelligence Points",
     type: "none",
-    layerShown() { return (player[this.layer].points.eq(0)) ? false : true },
+    layerShown: false, // microtab embedded
     upgrades: {
     },
     clickables: {
@@ -54,20 +55,14 @@ addLayer("int",{
             display: "Sharpens analytical thinking.",
             style: {'color': '#c0c0c0'},
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         12: {
             title: "Learning a New Language or Subject",
             display: "Challenges your mind and expands knowledge.",
             style: {'color': '#c0c0c0'},
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player[this.layer].currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
     },
     buyables: {
@@ -80,18 +75,46 @@ addLayer("int",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()}  },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()} },
             progress()  { return player[this.layer].current.div(player[this.layer].target) },
             display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
+    milestones: {
+        0: {
+            requirementDescription: "2 Intelligence Points",
+            effectDescription: "Unlock the Map",
+            done() { return player.int.points.gte(2) },
+            unlocked() { return player.int.points.gte(2) },
+            onComplete() { player.map = 1 },
+            style: { 'background-color': 'lightblue' },
+        },
+        1: {
+            requirementDescription: "4 Intelligence Points",
+            effectDescription: "Gain another Character Attribute Point",
+            done() { return player.int.points.gte(4) },
+            unlocked() { return player.int.points.gte(4) },
+            onComplete() { player.c.points = player.c.points.add(1) },
+            style: { 'background-color': 'lightblue' },
+        },
+    },
     tabFormat: [
-        ["infobox", "top"],
-        "main-display",
-        "blank",
-        ["bar", "b1"],
-        "blank",
-        "clickables",
-        "milestones",
+        ['raw-html', '<h2>Intelligence measures mental acuity, accuracy of recall, and the ability to reason.</h2>'],
+        'blank',
+        ['raw-html', function() {
+            color = player[this.layer].rgb.nodecolor()
+            pts = player[this.layer].points
+            name = player[this.layer].name
+            return 'You have invested <h2 style="color: ' + color +
+            //'; text-shadow: ' + color + ' 0px 0px 10px;">' +
+            '; text-shadow: white 0px 0px 10px;">' +
+                   pts + '</h2> Attribute Points in ' + name
+        }],
+        'blank',
+        ['bar', 'b1'],
+        'blank',
+        'clickables',
+        'blank',
+        'milestones',
     ],
 })

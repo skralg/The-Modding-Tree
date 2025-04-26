@@ -5,6 +5,7 @@ addLayer("str",{
     position: 0,
     startData() { return {
         unlocked: true,
+        name: 'Strength', // makes it available sooner to functions
         points: new Decimal(0),
         // Current and Target for point skillup
         current: new Decimal(0),
@@ -37,41 +38,34 @@ addLayer("str",{
             },
         },
     }},
-    color() { return player.str.rgb.nodecolor() },
+    color() { return player[this.layer].rgb.nodecolor() },
     requires: new Decimal(0),
     resource: "Strength Points",
     type: "none",
-    layerShown() { return !player.str.points.eq(0) },
+    layerShown: false, // microtab embedded
     upgrades: {
     },
     clickables: {
         11: {
-            title: "Weight lifting & Resistance Training",
-            display: "Focus on compound lifts (squats, deadlifts) to build raw power",
+            title: "Weight lifting",
+            display: "<br>Focus on squats and deadlifts to build raw power",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         12: {
             title: "Rock Climbing",
-            display: "Challenges muscles, grip strength, and overall power.",
+            display: "<br>Challenges muscles, grip strength, and overall power.",
             canClick: true,
-            onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-            },
+            onClick() {player[this.layer].currAdd(player[this.layer].points)},
         },
         21: {
             title: "Chop wood",
             display: "<br>Requires an axe",
-            canClick() { return player.axe > 0 },
+            canClick() { return player.axe.gt(0) },
             onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-                // might need to be modified later
-                player.wood += click_value
+                player[this.layer].currAdd(player[this.layer].points)
+                click_value = player.axe // axe value
+                player.wood = player.wood.add(click_value)
             },
         },
         22: {
@@ -84,8 +78,8 @@ addLayer("str",{
             display() {
                 str = player.str.rgb.label()
                 dex = player.dex.rgb.label()
-                label = str + " " + dex + "<br>"
-                return  label + "Combines raw power with agile, precise movements."
+                label = str + ' ' + dex + '<br><br>'
+                return  label + "Combines power with precise movements."
             },
             canClick() {
                 if (player.str.points.eq(0)) return false;
@@ -93,18 +87,17 @@ addLayer("str",{
                 return true
             },
             onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-                player.dex.currAdd(click_value)
+                player[this.layer].currAdd(player[this.layer].points)
+                player.dex.currAdd(player.dex.points)
             },
         },
         32: {
-            title: "Obstacle Course Races",
+            title: "Obstacle Courses",
             display() {
                 str = player.str.rgb.label()
                 con = player.con.rgb.label()
-                label = str + " " + con + "<br>"
-                return  label + "Tasks you with physically demanding challenges over time."
+                label = str + " " + con + "<br><br>"
+                return label + "Physically demanding challenges over time."
             },
             canClick() {
                 if (player.str.points.eq(0)) return false;
@@ -112,19 +105,12 @@ addLayer("str",{
                 return true
             },
             onClick() {
-                click_value = 1 // 1 point of upgrade for this clickable
-                player.str.currAdd(click_value)
-                player.con.currAdd(click_value)
+                player[this.layer].currAdd(player[this.layer].points)
+                player.con.currAdd(player.con.points)
             },
         },
     },
     buyables: {
-    },
-    infoboxes: {
-        top: {
-            title: "Strength Training",
-            body: "Let's get strong!",
-        },
     },
     bars: {
         b1: {
@@ -132,9 +118,9 @@ addLayer("str",{
             width: 500,
             height: 16,
             unlocked: true,
-            fillStyle() { return {'background-color': player.str.rgb.nodecolor()}  },
-            progress()  { return player.str.current.div(player.str.target) },
-            display()   { return player.str.current + " / " + player.str.target },
+            fillStyle() { return {'background-color': player[this.layer].rgb.nodecolor()} },
+            progress()  { return player[this.layer].current.div(player[this.layer].target) },
+            display()   { return player[this.layer].current + " / " + player[this.layer].target },
         },
     },
     milestones: {
@@ -162,13 +148,21 @@ addLayer("str",{
         },
     },
     tabFormat: [
-        ["infobox", "top"],
-        "main-display",
-        "blank",
-        ["bar", "b1"],
-        "blank",
-        "clickables",
-        "blank",
-        "milestones",
+        ['raw-html', '<h2>Strength measures bodily power, athletic training, and the extent to which you can exert raw physical force.</h2>'],
+        'blank',
+        ['raw-html', function() {
+            color = player.str.rgb.nodecolor()
+            pts = player[this.layer].points
+            name = player[this.layer].name
+            return 'You have invested <h2 style="color: ' + color +
+                   '; text-shadow: ' + color + ' 0px 0px 10px;">' +
+                   pts + '</h2> Attribute Points in ' + name
+        }],
+        'blank',
+        ['bar', 'b1'],
+        'blank',
+        'clickables',
+        'blank',
+        'milestones',
     ],
 })
