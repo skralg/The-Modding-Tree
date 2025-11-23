@@ -17,6 +17,32 @@ function abilityModifier(points) {
     if (points == 30) return 10;
 }
 
+function calcCopper() {
+    silver_cost = 10 // 1 silver = 10 copper
+    gold_cost = silver_cost * 10 // 1 gold = 10 silver
+    platinum_cost = gold_cost * 10 // 1 platinum = 10 gold
+    copper = player.copper
+    units = []
+    platinum = Math.floor(copper.div(platinum_cost))
+    if (platinum > 0) {
+        copper = copper.sub(platinum * platinum_cost)
+        units.push(platinum + ' platinum')
+    }
+    gold = Math.floor(copper.div(gold_cost))
+    if (gold > 0) {
+        copper = copper.sub(gold * gold_cost)
+        units.push(gold + ' gold')
+    }
+    silver = Math.floor(copper.div(silver_cost))
+    if (silver > 0) {
+        copper = copper.sub(silver * silver_cost)
+        units.push(silver + ' silver')
+    }
+    units.push(Math.trunc(copper) + ' copper')
+    
+    return units.join(', ')
+}
+
 addLayer("c",{
     name: "Character",
     symbol: "C",
@@ -32,7 +58,7 @@ addLayer("c",{
     type: "none",
     layerShown: true,
     componentStyles: {
-        clickable: {'border-radius': '10%'},
+        clickable: {'border-radius': '10%', 'width': '125px'},
         microtabs: {'align-self': 'flex-start', 'margin': '5px', 'border-width': '0px'},
     },
     shouldNotify() {
@@ -68,7 +94,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Strength</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.str.points.eq(0) },
+            canClick() { return player.str.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.str.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -81,7 +107,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Dexterity</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.dex.points.eq(0) },
+            canClick() { return player.dex.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.dex.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -94,7 +120,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Constitution</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.con.points.eq(0) },
+            canClick() { return player.con.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.con.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -107,7 +133,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Intelligence</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.int.points.eq(0) },
+            canClick() { return player.int.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.int.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -120,7 +146,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Wisdom</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.wis.points.eq(0) },
+            canClick() { return player.wis.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.wis.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -133,7 +159,7 @@ addLayer("c",{
                 return '<br>Unlock Training: <b>Charisma</b><br><br>Cost: 1 Ability Point'
             },
             style: {'margin': '5px'},
-            canClick() { return player.cha.points.eq(0) },
+            canClick() { return player.cha.points.eq(0) && player.c.points.gt(0) },
             onClick() {
                 player.cha.points = new Decimal(1)
                 player.c.points = player.c.points.sub(1)
@@ -291,7 +317,7 @@ addLayer("e", {
     name: "Equipment",
     symbol: "E",
     row: 0,
-    position: 1,
+    position: 2,
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
@@ -300,7 +326,7 @@ addLayer("e", {
     requires: new Decimal(0),
     resource: "Equipment Rating",
     type: "none",
-    layerShown() { return player.str.points.gte(2) },
+    layerShown() { return false }, //player.str.points.gte(2) },
     upgrades: {
     },
     clickables: {
@@ -384,7 +410,7 @@ addLayer("i",{
     name: "Inventory",
     symbol: "I",
     row: 0,
-    position: 2,
+    position: 1,
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
@@ -396,7 +422,7 @@ addLayer("i",{
     requires: new Decimal(0),
     resource: "Extra Backpack Slots",
     type: "none",
-    layerShown() { return player.str.points.gte(3) },
+    layerShown() { return false }, //player.str.points.gte(3) },
     upgrades: {
     },
     clickables: {
@@ -652,69 +678,4 @@ addLayer("pvp", {
             ],
         ],
     ],
-})
-
-addLayer("q", {
-    name: "Quests",
-    symbol: "Q",
-    row: 1,
-    position: 5,
-    startData() {return {
-        unlocked: true,
-        points: new Decimal(0),
-    }},
-    color: "#ccccff",
-    resource: "Fame",
-    type: "none",
-    layerShown() { return player.int.points.gte(3) },
-    infoboxes: {
-        quests: {
-            title: 'Quest Log and Status',
-            body: "Quests are one of the ways to make the numbers go up.",
-        },
-    },
-    challenges: {
-        11: {
-            name() {
-                return 'Gear up ' + challengeCompletions(this.layer, 11) + '/10';
-            },
-            completionLimit: 10,
-            challengeDescription() {
-                completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return 'We have to figure out how to get some wood, so we can build things.<br>';
-
-                return 'Challenge ' + (completes + 1) + ' has not been developed yet';
-            },
-            goalDescription() {
-                completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return  'Find an axe<br>';
-
-                return 'Goal ' + (completes + 1) + ' is not implemented';
-            },
-            rewardDescription() {
-                completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return 'The STR ability to chop down trees to obtain wood.';
-
-                return 'Reward ' + (completes + 1) + ' is not implemented';
-            },
-            canComplete() {
-                completes = challengeCompletions(this.layer, 11);
-                if (completes == 0) return hasUpgrade('m', 31);
-
-                return false;
-            },
-            onComplete() {
-                completes = challengeCompletions(this.layer, 11);
-                if (completes == 1) return player.axe.eq(1);
-
-                alert('Q layer challenge 11 completion ' + completes + ' has no onComplete()!');
-            },
-        },
-    },
-    tabFormat: [
-        'main-display',
-        ['infobox', 'quests'],
-        'challenges',
-    ],
-    branches() {return [["m", "white"]]},
 })

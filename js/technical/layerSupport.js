@@ -24,7 +24,7 @@ function updateHotkeys()
         hk = layers[layer].hotkeys
         if (hk){
             for (id in hk){
-				hotkeys[hk[id].key] = hk[id]
+                hotkeys[hk[id].key] = hk[id]
                 hotkeys[hk[id].key].layer = layer
                 hotkeys[hk[id].key].id = id
                 if (hk[id].unlocked === undefined)

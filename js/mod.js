@@ -10,7 +10,7 @@ let modInfo = {
 		"layers.js", "tree.js",
 		"layers/str.js", "layers/dex.js", "layers/con.js",
 		"layers/int.js", "layers/wis.js", "layers/cha.js",
-		"layers/map.js"
+		"layers/map.js", "layers/quest.js", "layers/tavern.js",
 	],
 
 	discordName: "",
@@ -75,6 +75,7 @@ function addedPlayerData() { return {
 	shield: new Decimal(0),
 	// equipment: tools
 	axe: new Decimal(0),
+	shovel: new Decimal(0),
 	pick: new Decimal(0),
 	backpack: new Decimal(0),
 	map: new Decimal(0),
@@ -82,7 +83,10 @@ function addedPlayerData() { return {
 	balls: new Decimal(0),
 	cards: new Decimal(0),
 	wood: new Decimal(0),
+	// Money
+	copper: new Decimal(123456789),
 }}
+
 
 // Display extra things at the top of the page
 var displayThings = [

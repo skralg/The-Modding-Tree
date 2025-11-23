@@ -16,7 +16,7 @@ addNode(
 
 
 addLayer(
-    "tree-tab", 
+    "tree-tab",
     {
         tabFormat: [
             ["tree", function() {return (layoutInfo.treeLayout ? layoutInfo.treeLayout : TREE_LAYERS)}]

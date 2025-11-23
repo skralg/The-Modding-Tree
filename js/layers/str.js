@@ -127,15 +127,15 @@ addLayer("str",{
         0: {
             requirementDescription: "2 Strength Points",
             effectDescription: "Unlock Equipment",
-            done() { return player.str.points.gte(2) },
-            unlocked() { return player.str.points.gte(2) },
+            done() { return false }, //player.str.points.gte(2) },
+            unlocked() { return false }, //player.str.points.gte(2) },
             style: { 'background-color': 'red' },
         },
         1: {
             requirementDescription: "3 Strength Points",
             effectDescription: "Unlock Inventory",
-            done() { return player.str.points.gte(3) },
-            unlocked() { return player.str.points.gte(3) },
+            done() { return false }, //player.str.points.gte(3) },
+            unlocked() { return false }, //player.str.points.gte(3) },
             style: { 'background-color': 'red' },
         },
         2: {
