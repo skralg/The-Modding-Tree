@@ -19,7 +19,7 @@ addLayer('t', {
     requires: new Decimal(0),
     resource: "Tavern Points",
     type: "none",
-    layerShown: false,
+    layerShown() { return hasUpgrade('m', 11) },
     infoboxes: {
         tavern: {
             title: 'Tavern',

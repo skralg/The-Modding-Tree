@@ -70,7 +70,7 @@ addLayer("q", {
             },
             goalDescription() {
                 completes = challengeCompletions(this.layer, 12);
-                if (completes == 0) return  'Chop trees (STR task) to acquire wood to build a tavern<br>';
+                if (completes == 0) return  'Chop trees (STR task) to acquire 100 wood to build a tavern<br>';
                 // Default need-dev response
                 return 'Goal ' + (completes + 1) + ' is not implemented<br>';
             },

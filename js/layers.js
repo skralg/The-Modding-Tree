@@ -326,7 +326,7 @@ addLayer("e", {
     requires: new Decimal(0),
     resource: "Equipment Rating",
     type: "none",
-    layerShown() { return false }, //player.str.points.gte(2) },
+    layerShown() { return challengeCompletions('q', 11) >= 1 },
     upgrades: {
     },
     clickables: {
@@ -422,7 +422,7 @@ addLayer("i",{
     requires: new Decimal(0),
     resource: "Extra Backpack Slots",
     type: "none",
-    layerShown() { return false }, //player.str.points.gte(3) },
+    layerShown() { return challengeCompletions('q', 11) >= 1 },
     upgrades: {
     },
     clickables: {
