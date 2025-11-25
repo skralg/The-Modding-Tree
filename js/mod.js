@@ -84,7 +84,7 @@ function addedPlayerData() { return {
 	cards: new Decimal(0),
 	wood: new Decimal(0),
 	// Money
-	copper: new Decimal(123456789),
+	copper: new Decimal(0),
 }}
 
 
