@@ -60,7 +60,14 @@ addLayer("str",{
         },
         21: {
             title: "Chop wood",
-            display: "<br>Requires an axe",
+            display() {
+                if (player.axe.eq(0)) {
+                    return "<br>Requires an axe."
+                }
+                if (player.axe.gt(0)) {
+                    return "<br>You have " + player.wood + " wood."
+                }
+            },
             canClick() { return player.axe.gt(0) },
             onClick() {
                 player[this.layer].currAdd(player[this.layer].points)

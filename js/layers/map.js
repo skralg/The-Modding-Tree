@@ -258,8 +258,9 @@ addLayer('m', {
                 if (amenities.length > 0) {
                     out += 'You own the following buildings:<br>';
                     for (i = 0; i < amenities.length; i++) {
-                        out += amenities[i] + '<br>';
+                        out += amenities[i];
                         if (i < amenities.length - 1) out += ', ';
+                        out += '<br>';
                     }
                 } else {
                     out += 'It has room to grow.';

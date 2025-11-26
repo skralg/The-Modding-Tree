@@ -51,7 +51,7 @@ addLayer("q", {
                 completes = challengeCompletions(this.layer, 11);
                 if (completes == 1) return player.axe = player.axe.add(1);
                 // Default need-dev response
-                alert('Q layer challenge 11 completion ' + completes + ' has no onComplete()!');
+                alert('Q:C:11 completion ' + completes + ' has no onComplete()!');
             },
         },
         12: {
@@ -65,32 +65,46 @@ addLayer("q", {
             challengeDescription() {
                 completes = challengeCompletions(this.layer, 12);
                 if (completes == 0) return 'We have to figure out how to get some wood, so we can build things.<br>';
+                if (completes == 1) return 'The tavern keeper needs some help. Something about a rat problem?<br>';
                 // Default need-dev response
                 return 'Challenge ' + (completes + 1) + ' has not been developed yet<br>';
             },
             goalDescription() {
                 completes = challengeCompletions(this.layer, 12);
-                if (completes == 0) return  'Chop trees (STR task) to acquire 100 wood to build a tavern<br>';
+                if (completes == 0) return 'Chop trees (STR task) to acquire 100 wood to build a tavern<br>';
+                if (completes == 1) return 'Defeat 10 rats.<br>';
                 // Default need-dev response
                 return 'Goal ' + (completes + 1) + ' is not implemented<br>';
             },
             rewardDescription() {
                 completes = challengeCompletions(this.layer, 12);
                 if (completes == 0) return 'The ability to build a tavern in the village.';
+                if (completes == 1) return 'Expand your domain.'; // land ownership
                 // Default need-dev response
                 return 'Reward ' + (completes + 1) + ' is not implemented<br>';
+            },
+            onEnter() {
+                completes = challengeCompletions(this.layer, 12);
+                if (completes == 1) {
+                    player.t.tavern.rat_count = player.t.tavern.rat_count.add(15);
+                }
             },
             canComplete() {
                 completes = challengeCompletions(this.layer, 12);
                 if (completes == 0) return player.wood.gte(100);
+                if (completes == 1) return player.t.tavern.rat_kills.gte(10);
                 // Default need-dev response
                 return false;
             },
             onComplete() {
                 completes = challengeCompletions(this.layer, 12);
                 if (completes == 1) return; // No effect needed
+                if (completes == 2) {
+                    player.m.points = player.m.points.add(1);
+                    return;
+                }
                 // Default need-dev response
-                alert('Q layer challenge 12 completion ' + completes + ' has no onComplete()!');
+                alert('Q:C:12 completion ' + completes + ' has no onComplete()!');
             }
         },
     },
