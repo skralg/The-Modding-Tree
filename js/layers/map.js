@@ -14,8 +14,8 @@ function mapTileVisible(obj) {
 }
 function move(obj) {
     id = parseInt(obj.id);
-    if (!this.m.visited.includes(id)) this.m.visited.push(id);
-    this.m.location = obj.id;
+    if (!player.m.visited.includes(id)) player.m.visited.push(id);
+    player.m.location = obj.id;
 }
 function clickable(obj) {return parseInt(obj.id) != player.m.location}
 function marked(obj)    {return parseInt(obj.id) == player.m.location}
@@ -566,7 +566,7 @@ addLayer('m', {
             cost: 100,
             currencyDisplayName: 'Wood',
             currencyInternalName: 'wood',
-            display() { return 'woggle' },
+            display() { return true; },
             effect() { return copperGain() },
             effectDisplay() { return format(this.effect(), precision=0) + ' copper every 10 seconds' },
             unlocked() {
@@ -647,6 +647,13 @@ addLayer('m', {
             },
         },
     },
+    microtabs: {
+        tabs: {
+            'Tavern': {
+                embedLayer: 't',
+            }
+        }
+    },
     tabFormat: [
         ['infobox', 'maps'],
         ['raw-html', function() {
@@ -662,6 +669,7 @@ addLayer('m', {
         'h-line',
         ['infobox', 'village'],
         'upgrades',
-        ['tree', [['t']]],
+        'blank',
+        ['microtabs', 'tabs'],
     ],
 })

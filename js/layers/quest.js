@@ -92,7 +92,7 @@ addLayer("q", {
             canComplete() {
                 completes = challengeCompletions(this.layer, 12);
                 if (completes == 0) return player.wood.gte(100);
-                if (completes == 1) return player.t.tavern.rat_kills.gte(10);
+                if (completes == 1) return player.t.tavern.rat_kills > 10;
                 // Default need-dev response
                 return false;
             },

@@ -76,12 +76,14 @@ addLayer("c",{
     },
     clickables: {
         cheat1: {
+            unlocked: false,
             title: "Cheat+1",
             display: "<br>Add 1 Ability point<br><br>",
             canClick: true,
             onClick() { player[this.layer].points = player[this.layer].points.add(1) },
         },
         cheat10: {
+            unlocked: false,
             title: "Cheat*10",
             display: "<br>Multiply Ability points by 10",
             canClick: true,
@@ -244,13 +246,7 @@ addLayer("c",{
     },
     branches() {
         return [
-            ["str", player.str.rgb.branchcolor()],
-            ["dex", player.dex.rgb.branchcolor()],
-            ["con", player.con.rgb.branchcolor()],
-            ["int", player.int.rgb.branchcolor()],
-            ["wis", player.wis.rgb.branchcolor()],
-            ["cha", player.cha.rgb.branchcolor()],
-            ["e", "white"]
+            ["i", "white"]
         ]
     },
     microtabs: {
@@ -450,6 +446,10 @@ addLayer("i",{
     },
     infoboxes: {
     },
+    branches: [
+        ["c", "white"],
+        ["i", "white"]
+    ]
 })
 
 addLayer("pve", {
